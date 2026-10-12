@@ -10,33 +10,84 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalizRouteImport } from './routes/analiz'
+import { Route as CvRouteImport } from './routes/cv'
+import { Route as EtkiRouteImport } from './routes/etki'
+import { Route as HedefRouteImport } from './routes/hedef'
+import { Route as YolHaritasiRouteImport } from './routes/yol-haritasi'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnalizRoute = AnalizRouteImport.update({
+  id: '/analiz',
+  path: '/analiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CvRoute = CvRouteImport.update({
+  id: '/cv',
+  path: '/cv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EtkiRoute = EtkiRouteImport.update({
+  id: '/etki',
+  path: '/etki',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HedefRoute = HedefRouteImport.update({
+  id: '/hedef',
+  path: '/hedef',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const YolHaritasiRoute = YolHaritasiRouteImport.update({
+  id: '/yol-haritasi',
+  path: '/yol-haritasi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analiz': typeof AnalizRoute
+  '/cv': typeof CvRoute
+  '/etki': typeof EtkiRoute
+  '/hedef': typeof HedefRoute
+  '/yol-haritasi': typeof YolHaritasiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analiz': typeof AnalizRoute
+  '/cv': typeof CvRoute
+  '/etki': typeof EtkiRoute
+  '/hedef': typeof HedefRoute
+  '/yol-haritasi': typeof YolHaritasiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analiz': typeof AnalizRoute
+  '/cv': typeof CvRoute
+  '/etki': typeof EtkiRoute
+  '/hedef': typeof HedefRoute
+  '/yol-haritasi': typeof YolHaritasiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/analiz' | '/cv' | '/etki' | '/hedef' | '/yol-haritasi'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/analiz' | '/cv' | '/etki' | '/hedef' | '/yol-haritasi'
+  id:
+    '__root__' | '/' | '/analiz' | '/cv' | '/etki' | '/hedef' | '/yol-haritasi'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalizRoute: typeof AnalizRoute
+  CvRoute: typeof CvRoute
+  EtkiRoute: typeof EtkiRoute
+  HedefRoute: typeof HedefRoute
+  YolHaritasiRoute: typeof YolHaritasiRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +99,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analiz': {
+      id: '/analiz'
+      path: '/analiz'
+      fullPath: '/analiz'
+      preLoaderRoute: typeof AnalizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cv': {
+      id: '/cv'
+      path: '/cv'
+      fullPath: '/cv'
+      preLoaderRoute: typeof CvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/etki': {
+      id: '/etki'
+      path: '/etki'
+      fullPath: '/etki'
+      preLoaderRoute: typeof EtkiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hedef': {
+      id: '/hedef'
+      path: '/hedef'
+      fullPath: '/hedef'
+      preLoaderRoute: typeof HedefRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/yol-haritasi': {
+      id: '/yol-haritasi'
+      path: '/yol-haritasi'
+      fullPath: '/yol-haritasi'
+      preLoaderRoute: typeof YolHaritasiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalizRoute: AnalizRoute,
+  CvRoute: CvRoute,
+  EtkiRoute: EtkiRoute,
+  HedefRoute: HedefRoute,
+  YolHaritasiRoute: YolHaritasiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
