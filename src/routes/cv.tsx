@@ -64,7 +64,7 @@ function CvPage() {
   const t = TARGETS[s.target];
   const text = Object.values(s.profile).join(" ").toLocaleLowerCase("tr-TR");
   const kw = t.atsKeywords.map((k) => ({ k, ok: text.includes(k.toLocaleLowerCase("tr-TR")) }));
-  const cv = buildCv(s.profile, s.target, a.strengths.map((x) => x.name.split(" (")[0]));
+  const cv = buildCv(s.profile, s.target, a.strengths.map((x) => x.name.split(" (")[0] ?? x.name));
 
   const copy = async () => { await navigator.clipboard.writeText(cv); setCopied(true); setTimeout(() => setCopied(false), 1800); };
   const download = () => {

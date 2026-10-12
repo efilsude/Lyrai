@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, type LinkProps } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useStore } from "@/lib/store";
 import type { Priority } from "@/lib/career-data";
@@ -58,7 +58,7 @@ const btnVariants = {
   outline: "border bg-card text-foreground hover:bg-muted",
   teal: "bg-teal text-navy-foreground hover:opacity-90",
 };
-export function Btn({ to, onClick, children, variant = "primary", className = "", disabled }: { to?: string; onClick?: () => void; children: ReactNode; variant?: keyof typeof btnVariants; className?: string; disabled?: boolean }) {
+export function Btn({ to, onClick, children, variant = "primary", className = "", disabled }: { to?: LinkProps["to"]; onClick?: () => void; children: ReactNode; variant?: keyof typeof btnVariants; className?: string; disabled?: boolean }) {
   const cls = `${btnBase} ${btnVariants[variant]} ${className}`;
   if (to) return <Link to={to} className={cls}>{children}</Link>;
   return <button type="button" onClick={onClick} disabled={disabled} className={cls}>{children}</button>;
