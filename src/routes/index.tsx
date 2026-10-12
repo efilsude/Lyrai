@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Btn, Ring, Bar } from "@/components/kr";
+import { Btn } from "@/components/kr";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,83 +16,94 @@ export const Route = createFileRoute("/")({
 });
 
 const steps = [
-  { n: "01", t: "Hedefini seç", d: "ASELSAN Proje Yöneticisi veya Veri Bilimci gibi somut bir pozisyon belirle." },
-  { n: "02", t: "Profilini gir", d: "Bölüm, beceri, proje, sertifika ve gönüllülük deneyimlerini ekle." },
-  { n: "03", t: "Açıklarını gör", d: "Uyum skorunu, güçlü yönlerini ve öncelikli eksik becerilerini incele." },
-  { n: "04", t: "Yol haritanı izle", d: "Adım adım görevleri tamamla, ilerlemeni ve CV'ni güncelle." },
+  { t: "Hedefini somutlaştır", d: "\"Savunma sanayiinde çalışmak\" yerine \"ASELSAN'da Proje Yöneticisi\" gibi tek bir pozisyon seç. Plan ancak hedef netse işe yarar." },
+  { t: "Bugünkü durumunu yaz", d: "Dersler, kulüp görevleri, staj, sertifika ve gönüllülük. Küçük görünen deneyimler çoğu zaman en güçlü kanıttır." },
+  { t: "Açığı ölç", d: "Pozisyonun beklediği sekiz temel yetkinliğe karşı hangilerini kanıtlayabildiğini, hangilerinin eksik olduğunu gör." },
+  { t: "Dönem dönem ilerle", d: "Eksikleri 0–3, 3–6 ve 6–12 aylık dilimlere bölünmüş somut görevlere çevir; tamamladıkça işaretle." },
+];
+
+const sample = [
+  ["Risk ve bütçe yönetimi", "Yüksek", "Örnek bir proje için risk kaydı ve EVM tablosu hazırla", "2 hafta"],
+  ["Sistem mühendisliği", "Yüksek", "INCOSE giriş eğitimi ve gereksinim dokümanı çalışması", "4 hafta"],
+  ["Agile / Scrum", "Orta", "Kulüp projesini iki haftalık sprintlerle yönet", "3 hafta"],
 ];
 
 function Index() {
   return (
     <>
-      <section className="relative overflow-hidden">
-        <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 md:grid-cols-2 md:py-24">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-teal" /> Öğrenciler ve yeni mezunlar için
-            </span>
-            <h1 className="mt-5 text-4xl font-bold leading-tight sm:text-5xl">Hedefindeki kariyere giden yolu keşfet.</h1>
-            <p className="mt-5 max-w-lg text-lg text-muted-foreground">
-              Hedef pozisyonuna göre beceri açıklarını belirle, sana özel bir kariyer planı oluştur ve CV'ni ATS'ye uygun hale getir.
+      <section className="mx-auto max-w-6xl px-4 pt-16 pb-20 md:pt-24">
+        <div className="grid gap-12 md:grid-cols-12">
+          <div className="md:col-span-7">
+            <div className="eyebrow">Üniversite öğrencileri ve yeni mezunlar için</div>
+            <h1 className="mt-6 text-5xl leading-[1.05] sm:text-6xl">Hedefindeki kariyere giden yolu keşfet.</h1>
+          </div>
+          <div className="flex flex-col justify-end md:col-span-5">
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              Hangi pozisyonu istediğini biliyorsun, ama oraya hangi beceriler, stajlar ve projelerle varacağını bilmiyorsan KariyerRota açığı ölçer ve dönem dönem bir plan çıkarır.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Btn to="/hedef" className="px-6 py-3 text-base">Yol Haritamı Oluştur →</Btn>
-              <Btn to="/etki" variant="outline" className="px-6 py-3 text-base">Sosyal etki modeli</Btn>
-            </div>
-          </div>
-          <div className="card-surface p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xs text-muted-foreground">Hedef</div>
-                <div className="font-display font-bold">ASELSAN · Proje Yöneticisi</div>
-              </div>
-              <span className="rounded-full bg-teal-soft px-2 py-1 text-xs font-semibold text-teal">Örnek</span>
-            </div>
-            <div className="mt-6 flex items-center gap-6">
-              <Ring value={62} label="uyum" size={120} />
-              <div className="flex-1 space-y-3 text-sm">
-                {[["Yönetim", 55], ["İletişim", 80], ["Teknik", 40], ["Araçlar", 70]].map(([k, v]) => (
-                  <div key={k}><div className="mb-1 flex justify-between"><span>{k}</span><span className="text-muted-foreground">%{v}</span></div><Bar value={v as number} /></div>
-                ))}
-              </div>
-            </div>
-            <div className="mt-6 rounded-sm bg-muted p-3 text-sm">
-              <span className="font-semibold">Sıradaki adım:</span> Risk kaydı ve EVM tablosu hazırla · <span className="text-teal">+8 puan</span>
+              <Btn to="/hedef" className="px-6 py-3">Yol Haritamı Oluştur</Btn>
+              <Btn to="/etki" variant="outline" className="px-6 py-3">Sosyal etki modeli</Btn>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <h2 className="text-3xl font-bold">Nasıl çalışır?</h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((s) => (
-            <div key={s.n} className="card-surface p-5">
-              <div className="font-display text-sm font-bold text-teal">{s.n}</div>
-              <div className="mt-3 font-display text-lg font-semibold">{s.t}</div>
-              <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+      <section className="border-y bg-card">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-12">
+          <div className="md:col-span-4">
+            <div className="eyebrow">Örnek çıktı</div>
+            <h2 className="mt-3 text-3xl">Endüstri Mühendisliği 3. sınıf öğrencisi, ASELSAN Proje Yöneticisi hedefi</h2>
+            <div className="mt-8 flex items-baseline gap-3">
+              <span className="font-display text-7xl">62</span>
+              <span className="text-sm text-muted-foreground">/ 100 uyum<br />(demo tahmini)</span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4">
-        <div className="grid gap-8 rounded-sm bg-navy p-8 text-navy-foreground md:grid-cols-[1.4fr_1fr] md:p-12">
-          <div>
-            <div className="eyebrow">Sosyal etki modeli</div>
-            <h2 className="mt-3 text-3xl font-bold">Kurumlar öder, dezavantajlı öğrenciler ücretsiz kullanır.</h2>
-            <p className="mt-4 opacity-80">Üniversite kariyer merkezleri ve işverenlerden gelen kurumsal gelir, burs alan ve dezavantajlı öğrencilere premium erişimi ücretsiz sağlar.</p>
-            <Btn to="/etki" variant="teal" className="mt-6">Modeli incele</Btn>
+            <p className="mt-3 text-sm text-muted-foreground">Sekiz temel yetkinlikten beşi kanıtlanmış. En büyük açık: teknik ekiplerle ortak dil.</p>
           </div>
-          <div className="grid grid-cols-2 gap-3 self-center">
-            {[["1 kurum lisansı", "≈ 200 ücretsiz öğrenci*"], ["Hedef kitle", "Burslu & ilk kuşak üniversiteliler"]].map(([a, b]) => (
-              <div key={a} className="rounded-sm border border-navy-foreground/15 p-4">
-                <div className="text-xs opacity-70">{a}</div>
-                <div className="mt-1 font-display font-semibold">{b}</div>
+          <div className="md:col-span-8">
+            <div className="grid grid-cols-[1fr_auto] border-b pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:grid-cols-[180px_1fr_auto]">
+              <span className="hidden sm:block">Eksik yetkinlik</span><span>Önerilen eylem</span><span>Süre</span>
+            </div>
+            {sample.map(([s, p, a, d]) => (
+              <div key={s} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 border-b py-4 sm:grid-cols-[180px_1fr_auto]">
+                <div className="col-span-2 sm:col-span-1">
+                  <div className="font-semibold">{s}</div>
+                  <div className="text-xs text-muted-foreground">{p} öncelik</div>
+                </div>
+                <div className="text-sm">{a}</div>
+                <div className="text-sm tabular-nums text-muted-foreground">{d}</div>
               </div>
             ))}
-            <p className="col-span-2 text-xs opacity-60">*Örnek gösterim amaçlı varsayım.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-20">
+        <div className="grid gap-10 md:grid-cols-12">
+          <h2 className="text-3xl md:col-span-4">Dört adımda, tahmin değil plan.</h2>
+          <ol className="md:col-span-8">
+            {steps.map((s, i) => (
+              <li key={s.t} className="grid grid-cols-[3rem_1fr] border-t py-6">
+                <span className="font-display text-2xl text-teal">{i + 1}</span>
+                <div>
+                  <h3 className="text-lg font-semibold">{s.t}</h3>
+                  <p className="mt-1 max-w-xl text-muted-foreground">{s.d}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="bg-navy text-navy-foreground">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-12">
+          <div className="md:col-span-7">
+            <div className="eyebrow">Sosyal etki modeli</div>
+            <h2 className="mt-3 text-4xl leading-tight">Kurumlar öder, imkânı kısıtlı öğrenciler ücretsiz kullanır.</h2>
+          </div>
+          <div className="md:col-span-5">
+            <p className="leading-relaxed opacity-80">Üniversite kariyer merkezleri ve işverenlerden gelen lisans geliri, burslu ve ilk kuşak üniversiteli öğrencilerin premium erişimini karşılar. Kariyer rehberliği büyük şehirdeki birkaç kampüsün ayrıcalığı olmamalı.</p>
+            <Btn to="/etki" variant="teal" className="mt-6">Modelin ayrıntıları</Btn>
           </div>
         </div>
       </section>
