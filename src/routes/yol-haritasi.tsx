@@ -21,13 +21,17 @@ export const Route = createFileRoute("/yol-haritasi")({
 function RoadmapPage() {
   const s = useStore();
   const a = useMemo(() => (s.target ? analyzeProfile(s.profile, s.target) : null), [s.profile, s.target]);
-  if (!s.target || !a || !s.analyzed)
+
+  if (!s.target || !a || !s.analyzed) {
     return (
       <div className="px-4 py-16">
         <NeedsSetup what="Yol haritası" />
       </div>
     );
-  const tasks = buildRoadmap(a, s.target);
+  }
+
+  // Merge default target tasks with any automated Erasmus mobility tasks
+  const tasks = buildRoadmap(a, s.target, s.erasmusTasks);
   const done = tasks.filter((t) => s.completed.includes(t.id));
   const pct = Math.round((done.length / tasks.length) * 100);
   const live = projectedScore(a, done.reduce((x, t) => x + t.points, 0));
@@ -40,9 +44,40 @@ function RoadmapPage() {
       <PageHead
         eyebrow="Adım 3"
         title="Kişisel yol haritan"
-        desc={`${t.company} · ${t.title} hedefi için öncelik sırasına göre planlanmış görevler.`}
+        desc={`${t.company} · ${t.title} hedefi için öncelik sırasına göre planlanmış görevler ve uluslararası hareketlilik adımları.`}
       />
 
+      {/* Erasmus Integration Banner */}
+      {s.erasmusTasks && s.erasmusTasks.length > 0 ? (
+        <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-teal/40 bg-teal/5 p-4 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-teal text-navy text-xs font-bold">✓</span>
+            <div>
+              <span className="font-semibold text-foreground">Erasmus+ Hazırlık Görevleri Dahil Edildi:</span>
+              <span className="ml-1 text-muted-foreground">
+                {s.erasmusTasks[0]?.meta || "Partner Kurum"} için {s.erasmusTasks.length} hedef adım yol haritana eklendi.
+              </span>
+            </div>
+          </div>
+          <Btn to="/erasmus" variant="outline" className="text-xs shrink-0 py-1.5 px-3">
+            Eşleşmeyi Yönet
+          </Btn>
+        </div>
+      ) : (
+        <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-dashed border-teal/30 bg-card p-4 text-xs">
+          <div>
+            <span className="font-semibold text-foreground">🌍 Uluslararası Hareketlilik & Erasmus Hedefin Var mı?</span>
+            <p className="mt-0.5 text-muted-foreground">
+              Dil yeterliliği ve GPA kriterlerine göre Avrupa partner üniversiteleriyle eşleş; eksik yetkinlikleri yol haritana otomatik aktar.
+            </p>
+          </div>
+          <Btn to="/erasmus" variant="outline" className="text-xs shrink-0 py-1.5 px-3">
+            Erasmus Modülünü İncele →
+          </Btn>
+        </div>
+      )}
+
+      {/* Sticky Progress Bar */}
       <div className="sticky top-[6.75rem] z-10 -mx-4 mb-10 grid items-center gap-x-8 gap-y-2 border-y bg-background/95 px-4 py-3 sm:grid-cols-[auto_1fr_auto] md:top-16">
         <div className="text-sm">
           <span className="font-display text-2xl tabular-nums">{done.length}/{tasks.length}</span>{" "}
@@ -71,6 +106,7 @@ function RoadmapPage() {
             <ul className="divide-y border-y">
               {inPhase.map((task) => {
                 const ok = s.completed.includes(task.id);
+                const isErasmus = task.source === "erasmus";
                 return (
                   <li key={task.id} className={`flex items-start gap-4 py-5 ${ok ? "opacity-60" : ""}`}>
                     <button
@@ -79,21 +115,29 @@ function RoadmapPage() {
                       aria-checked={ok}
                       aria-label={`${task.title} — ${ok ? "tamamlandı" : "tamamlanmadı"}`}
                       onClick={() => s.toggleTask(task.id)}
-                      className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center border-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ${
+                      className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center border-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring cursor-pointer ${
                         ok ? "border-teal bg-teal text-navy-foreground" : "border-input hover:border-primary"
                       }`}
                     >
                       {ok && <Check />}
                     </button>
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                        <span className="tag text-foreground">{task.type}</span>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                        {isErasmus ? (
+                          <span className="tag border border-teal/40 bg-teal/10 font-bold text-teal">
+                            Erasmus+ {task.meta ? `· ${task.meta.split(" — ")[0]}` : ""}
+                          </span>
+                        ) : (
+                          <span className="tag text-foreground">{task.type}</span>
+                        )}
                         <PriorityBadge p={task.priority} />
                         <span>Süre: {task.duration}</span>
                         {task.points > 0 && <span className="font-semibold text-teal">+{task.points} puan</span>}
-                        {task.id === nextId && <span className="tag text-teal">Sıradaki adım</span>}
+                        {task.id === nextId && <span className="tag text-teal font-semibold">Sıradaki adım</span>}
                       </div>
-                      <h3 className={`mt-2 font-semibold leading-snug ${ok ? "line-through" : ""}`}>{task.title}</h3>
+                      <h3 className={`mt-2 font-semibold leading-snug ${ok ? "line-through text-muted-foreground" : ""}`}>
+                        {task.title}
+                      </h3>
                       <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                         <span className="font-medium text-foreground">Neden önemli:</span> {task.why}
                       </p>
@@ -107,9 +151,12 @@ function RoadmapPage() {
       })}
 
       <DemoNote>
-        Süreler ve puan artışları örnek tahminlerdir. Başvuru tarihlerini ilgili kurumların resmi sayfalarından teyit et.
+        Süreler ve puan artışları örnek tahminlerdir. Başvuru tarihlerini ve hibe miktarlarını ilgili kurumların resmi sayfalarından teyit et.
       </DemoNote>
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-between items-center">
+        <Btn to="/erasmus" variant="outline">
+          ← Erasmus Eşleşmesi
+        </Btn>
         <Btn to="/cv">CV Asistanına Geç →</Btn>
       </div>
     </div>

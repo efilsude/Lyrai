@@ -25,6 +25,8 @@ const IDENTITY: Field[] = [
   { k: "university", label: "Üniversite", ph: "Örn. Hacettepe Üniversitesi" },
   { k: "department", label: "Bölüm", ph: "Örn. Elektrik-Elektronik Mühendisliği" },
   { k: "year", label: "Sınıf", ph: "Örn. 3. sınıf / Yeni mezun" },
+  { k: "gpa", label: "Akademik Ortalama (GPA)", ph: "Örn. 3.42 (Erasmus ve staj için)" },
+  { k: "languageLevel", label: "Yabancı Dil Yeterliliği", ph: "Örn. B2 (IELTS 6.5) / C1 İngilizce" },
 ];
 const EXPERIENCE: Field[] = [
   { k: "skills", label: "Beceriler (zorunlu)", ph: "Virgülle ayır: Python, Excel, İngilizce (B2)…", area: true },
@@ -54,15 +56,15 @@ function HedefPage() {
   };
 
   const canGo = !!store.target && p.skills.trim().length > 0;
-  const filled = (Object.keys(p) as (keyof Profile)[]).filter((k) => p[k].trim()).length;
+  const filled = (Object.keys(p) as (keyof Profile)[]).filter((k) => (p[k] ?? "").trim()).length;
 
   const renderField = (f: Field) => (
     <label key={f.k} className={f.area ? "block sm:col-span-2" : "block"}>
       <span className="text-sm font-semibold">{f.label}</span>
       {f.area ? (
-        <textarea rows={2} value={p[f.k]} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className={inputCls} />
+        <textarea rows={2} value={p[f.k] ?? ""} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className={inputCls} />
       ) : (
-        <input value={p[f.k]} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className={inputCls} />
+        <input value={p[f.k] ?? ""} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className={inputCls} />
       )}
     </label>
   );

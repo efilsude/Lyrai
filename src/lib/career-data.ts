@@ -73,6 +73,8 @@ export interface Profile {
   certificates: string;
   volunteering: string;
   international: string;
+  gpa?: string;
+  languageLevel?: string;
 }
 
 export const DEMO_PROFILE: Profile = {
@@ -85,9 +87,23 @@ export const DEMO_PROFILE: Profile = {
   certificates: "Google Proje Yönetimi Temelleri (Coursera)",
   volunteering: "AIESEC Ankara — Organizasyon Koordinatörü",
   international: "",
+  gpa: "3.42",
+  languageLevel: "B2 (IELTS 6.5)",
 };
 
-export const EMPTY_PROFILE: Profile = { name: "", university: "", department: "", year: "", skills: "", projects: "", certificates: "", volunteering: "", international: "" };
+export const EMPTY_PROFILE: Profile = {
+  name: "",
+  university: "",
+  department: "",
+  year: "",
+  skills: "",
+  projects: "",
+  certificates: "",
+  volunteering: "",
+  international: "",
+  gpa: "",
+  languageLevel: "",
+};
 
 export interface SkillResult extends Skill { has: boolean }
 export interface Analysis {
@@ -139,6 +155,8 @@ export interface Task {
   priority: Priority;
   why: string;
   points: number;
+  source?: "career" | "erasmus";
+  meta?: string;
 }
 
 const LEARN: Record<string, { title: string; duration: string }> = {
@@ -159,7 +177,7 @@ const LEARN: Record<string, { title: string; duration: string }> = {
   git: { title: "Tüm projelerini GitHub'a düzenli README'lerle taşı", duration: "1 hafta" },
 };
 
-export function buildRoadmap(analysis: Analysis, targetId: TargetId): Task[] {
+export function buildRoadmap(analysis: Analysis, targetId: TargetId, erasmusTasks: Task[] = []): Task[] {
   const skillTasks: Task[] = analysis.missing.map((s, i) => ({
     id: `skill-${s.id}`,
     phase: i < 2 ? "0–3. Ay" : i < 4 ? "3–6. Ay" : "6–12. Ay",
@@ -169,26 +187,249 @@ export function buildRoadmap(analysis: Analysis, targetId: TargetId): Task[] {
     priority: s.priority,
     why: s.why,
     points: s.weight,
+    source: "career",
   }));
   const extras: Task[] =
     targetId === "aselsan-pm"
       ? [
-          { id: "x-proj", phase: "3–6. Ay", title: "TEKNOFEST takımında proje planlama sorumluluğu al", type: "Proje", duration: "1 dönem", priority: "Yüksek", why: "Savunma sanayii odaklı yarışma deneyimi ASELSAN işe alımında doğrudan görünür bir referanstır.", points: 0 },
-          { id: "x-intern", phase: "6–12. Ay", title: "ASELSAN / STM / ROKETSAN yaz stajı başvurusu yap", type: "Proje", duration: "Başvuru: Şubat–Mart", priority: "Yüksek", why: "Savunma firmaları yeni mezun alımlarında stajyerlerine öncelik verir.", points: 0 },
-          { id: "x-aiesec", phase: "0–3. Ay", title: "AIESEC'te proje ekibi liderliği (OC/Team Leader) rolüne başvur", type: "Gönüllülük", duration: "6 ay", priority: "Orta", why: "Bütçe, takvim ve ekip yönetimini gerçek bir organizasyonda deneyimletir.", points: 0 },
-          { id: "x-erasmus", phase: "6–12. Ay", title: "Erasmus+ öğrenim veya staj hareketliliğine başvur", type: "Uluslararası", duration: "1 dönem", priority: "Orta", why: "Uluslararası ortaklı projelerde çok kültürlü çalışma deneyimi bir artı.", points: 0 },
+          { id: "x-proj", phase: "3–6. Ay", title: "TEKNOFEST takımında proje planlama sorumluluğu al", type: "Proje", duration: "1 dönem", priority: "Yüksek", why: "Savunma sanayii odaklı yarışma deneyimi ASELSAN işe alımında doğrudan görünür bir referanstır.", points: 0, source: "career" },
+          { id: "x-intern", phase: "6–12. Ay", title: "ASELSAN / STM / ROKETSAN yaz stajı başvurusu yap", type: "Proje", duration: "Başvuru: Şubat–Mart", priority: "Yüksek", why: "Savunma firmaları yeni mezun alımlarında stajyerlerine öncelik verir.", points: 0, source: "career" },
+          { id: "x-aiesec", phase: "0–3. Ay", title: "AIESEC'te proje ekibi liderliği (OC/Team Leader) rolüne başvur", type: "Gönüllülük", duration: "6 ay", priority: "Orta", why: "Bütçe, takvim ve ekip yönetimini gerçek bir organizasyonda deneyimletir.", points: 0, source: "career" },
+          { id: "x-erasmus", phase: "6–12. Ay", title: "Erasmus+ öğrenim veya staj hareketliliğine başvur", type: "Uluslararası", duration: "1 dönem", priority: "Orta", why: "Uluslararası ortaklı projelerde çok kültürlü çalışma deneyimi bir artı.", points: 0, source: "career" },
         ]
       : [
-          { id: "x-proj", phase: "3–6. Ay", title: "Uçtan uca bir Kaggle projesi: EDA → model → rapor", type: "Proje", duration: "4 hafta", priority: "Yüksek", why: "Portföy projesi, veri bilimi mülakatlarında CV'den daha çok konuşulur.", points: 0 },
-          { id: "x-cert", phase: "3–6. Ay", title: "Google Data Analytics veya IBM Data Science sertifikası", type: "Sertifika", duration: "6 hafta", priority: "Orta", why: "Yapılandırılmış öğrenme ve ATS anahtar kelimesi sağlar.", points: 0 },
-          { id: "x-vol", phase: "0–3. Ay", title: "Bir STK için gönüllü veri analizi (ör. Tohum Otizm, TEGV raporları)", type: "Gönüllülük", duration: "2 ay", priority: "Orta", why: "Gerçek veriyle sosyal etki yaratan proje hem portföyü hem hikâyeni güçlendirir.", points: 0 },
-          { id: "x-erasmus", phase: "6–12. Ay", title: "Erasmus+ staj veya AIESEC Global Talent ile yurt dışı veri stajı", type: "Uluslararası", duration: "2–6 ay", priority: "Düşük", why: "Global teknoloji ekiplerinde çalışma deneyimi kazandırır.", points: 0 },
+          { id: "x-proj", phase: "3–6. Ay", title: "Uçtan uca bir Kaggle projesi: EDA → model → rapor", type: "Proje", duration: "4 hafta", priority: "Yüksek", why: "Portföy projesi, veri bilimi mülakatlarında CV'den daha çok konuşulur.", points: 0, source: "career" },
+          { id: "x-cert", phase: "3–6. Ay", title: "Google Data Analytics veya IBM Data Science sertifikası", type: "Sertifika", duration: "6 hafta", priority: "Orta", why: "Yapılandırılmış öğrenme ve ATS anahtar kelimesi sağlar.", points: 0, source: "career" },
+          { id: "x-vol", phase: "0–3. Ay", title: "Bir STK için gönüllü veri analizi (ör. Tohum Otizm, TEGV raporları)", type: "Gönüllülük", duration: "2 ay", priority: "Orta", why: "Gerçek veriyle sosyal etki yaratan proje hem portföyü hem hikâyeni güçlendirir.", points: 0, source: "career" },
+          { id: "x-erasmus", phase: "6–12. Ay", title: "Erasmus+ staj veya AIESEC Global Talent ile yurt dışı veri stajı", type: "Uluslararası", duration: "2–6 ay", priority: "Düşük", why: "Global teknoloji ekiplerinde çalışma deneyimi kazandırır.", points: 0, source: "career" },
         ];
-  const all = [...skillTasks, ...extras];
+  const all = [...skillTasks, ...extras, ...erasmusTasks];
   const phaseOrder = ["0–3. Ay", "3–6. Ay", "6–12. Ay"];
   return all.sort((a, b) => phaseOrder.indexOf(a.phase) - phaseOrder.indexOf(b.phase));
 }
 
 export function projectedScore(analysis: Analysis, extraPoints: number) {
   return Math.min(97, analysis.score + extraPoints);
+}
+
+export type LanguageLevel = "A1" | "A2" | "B1" | "B2" | "C1" | "C2";
+
+export interface ErasmusUniversity {
+  id: string;
+  name: string;
+  country: string;
+  city: string;
+  flag: string;
+  minGpa: number;
+  minLanguage: LanguageLevel;
+  languageExamNote: string;
+  departments: string[];
+  monthlyGrant: number;
+  quota: number;
+  description: string;
+  tags: string[];
+}
+
+export const ERASMUS_UNIVERSITIES: ErasmusUniversity[] = [
+  {
+    id: "tum",
+    name: "TUM — Münih Teknik Üniversitesi",
+    country: "Almanya",
+    city: "Münih",
+    flag: "🇩🇪",
+    minGpa: 3.20,
+    minLanguage: "C1",
+    languageExamNote: "IELTS 7.0 / TOEFL 95 veya Kurum İçi C1 Sınavı",
+    departments: ["Endüstri Mühendisliği", "Bilgisayar Mühendisliği", "Elektrik-Elektronik", "Makine Mühendisliği"],
+    monthlyGrant: 600,
+    quota: 2,
+    description: "Avrupa'nın önde gelen teknik üniversitelerinden biri. İleri mühendislik ve inovasyon ekosistemi.",
+    tags: ["Mühendislik", "Endüstri 4.0", "Yüksek Prestij"],
+  },
+  {
+    id: "polimi",
+    name: "Politecnico di Milano",
+    country: "İtalya",
+    city: "Milano",
+    flag: "🇮🇹",
+    minGpa: 3.00,
+    minLanguage: "B2",
+    languageExamNote: "IELTS 6.0 veya Üniversite B2 İngilizce Yeterlilik",
+    departments: ["Endüstri Mühendisliği", "Yönetim Mühendisliği", "Tasarım", "Mimarlık", "Bilişim"],
+    monthlyGrant: 600,
+    quota: 3,
+    description: "Tasarım, sistem modelleme ve yönetim mühendisliğinde İtalya'nın 1 numaralı teknik üniversitesi.",
+    tags: ["Yönetim", "Tasarım", "Sistem Mühendisliği"],
+  },
+  {
+    id: "tudelft",
+    name: "TU Delft — Delft Teknik Üniversitesi",
+    country: "Hollanda",
+    city: "Delft",
+    flag: "🇳🇱",
+    minGpa: 3.30,
+    minLanguage: "C1",
+    languageExamNote: "IELTS 7.0 / TOEFL 100",
+    departments: ["Veri Bilimi", "Havacılık", "Endüstri Mühendisliği", "Sistem Mühendisliği"],
+    monthlyGrant: 600,
+    quota: 2,
+    description: "Havacılık, veri ve ileri robotik alanlarında küresel çapta tanınan öncü teknik enstitü.",
+    tags: ["Veri Bilimi", "Havacılık", "Robotik"],
+  },
+  {
+    id: "kth",
+    name: "KTH Royal Institute of Technology",
+    country: "İsveç",
+    city: "Stockholm",
+    flag: "🇸🇪",
+    minGpa: 3.10,
+    minLanguage: "B2",
+    languageExamNote: "IELTS 6.5 / B2 Üniversite Dil Skoru",
+    departments: ["Bilgisayar Mühendisliği", "Veri Bilimi", "Yapay Zeka", "Elektrik"],
+    monthlyGrant: 600,
+    quota: 2,
+    description: "İskandinavya'nın en büyük teknik araştırma ve eğitim kurumu. Güçlü yapay zeka ve yazılım kültürü.",
+    tags: ["Yapay Zeka", "Yazılım", "Sürdürülebilirlik"],
+  },
+  {
+    id: "rwth",
+    name: "RWTH Aachen University",
+    country: "Almanya",
+    city: "Aachen",
+    flag: "🇩🇪",
+    minGpa: 2.90,
+    minLanguage: "B2",
+    languageExamNote: "B2 İngilizce veya B2 Almanca belgesi",
+    departments: ["Makine Mühendisliği", "Üretim Sistemleri", "Endüstri Mühendisliği", "Otomotiv"],
+    monthlyGrant: 600,
+    quota: 4,
+    description: "Avrupa sanayisiyle en yoğun iş birliğine sahip teknik üniversitelerden biri. Proje tabanlı dersler.",
+    tags: ["Üretim", "Sanayi İş Birliği", "Otomotiv"],
+  },
+  {
+    id: "upm",
+    name: "Universidad Politécnica de Madrid (UPM)",
+    country: "İspanya",
+    city: "Madrid",
+    flag: "🇪🇸",
+    minGpa: 2.80,
+    minLanguage: "B1",
+    languageExamNote: "B1 İngilizce veya B1 İspanyolca",
+    departments: ["Tüm Mühendislikler", "Telekomünikasyon", "Bilişim", "Havacılık"],
+    monthlyGrant: 550,
+    quota: 4,
+    description: "Geniş ders kataloğu ve esnek kredi transferi ile uluslararası öğrenciler için erişilebilir partner.",
+    tags: ["Geniş Kontenjan", "Esnek Eşleşme", "Akdeniz"],
+  },
+];
+
+export const LANG_RANKS: Record<LanguageLevel, number> = {
+  A1: 1,
+  A2: 2,
+  B1: 3,
+  B2: 4,
+  C1: 5,
+  C2: 6,
+};
+
+export function parseGpa(val?: string): number {
+  if (!val) return 0;
+  const cleaned = val.replace(",", ".").match(/\d+(\.\d+)?/);
+  return cleaned ? parseFloat(cleaned[0]) : 0;
+}
+
+export function parseLanguageLevel(val?: string): LanguageLevel {
+  if (!val) return "B1";
+  const upper = val.toUpperCase();
+  if (upper.includes("C2")) return "C2";
+  if (upper.includes("C1")) return "C1";
+  if (upper.includes("B2")) return "B2";
+  if (upper.includes("B1")) return "B1";
+  if (upper.includes("A2")) return "A2";
+  if (upper.includes("A1")) return "A1";
+  return "B1";
+}
+
+export function calcErasmusScore(gpa: number, langScore: number): number {
+  // Ulusal Ajans standart formülü: %50 Not Ortalaması (100'lük sistemde) + %50 Dil Sınavı Puanı
+  const gpa100 = Math.min(100, Math.max(0, (gpa / 4.0) * 100));
+  const normalizedLang = Math.min(100, Math.max(0, langScore));
+  return Math.round((gpa100 * 0.5) + (normalizedLang * 0.5));
+}
+
+export function generateErasmusTasks(uni: ErasmusUniversity, userGpa: number, userLang: LanguageLevel): Task[] {
+  const tasks: Task[] = [];
+  const gpaGap = Number((uni.minGpa - userGpa).toFixed(2));
+  const langRankGap = LANG_RANKS[uni.minLanguage] - LANG_RANKS[userLang];
+
+  if (gpaGap > 0) {
+    tasks.push({
+      id: `erasmus-gpa-${uni.id}`,
+      phase: "0–3. Ay",
+      title: `Akademik ortalamanı (GPA) ${uni.minGpa.toFixed(2)} üzerine çıkar (Dönem derslerine odaklan)`,
+      type: "Uluslararası",
+      duration: "1 dönem",
+      priority: "Yüksek",
+      why: `${uni.name} asgari ${uni.minGpa.toFixed(2)} GPA barajı talep ediyor; mevcut ortalaman (${userGpa > 0 ? userGpa.toFixed(2) : "belirtilmemiş"}) hedefin ${gpaGap.toFixed(2)} puan gerisinde.`,
+      points: 5,
+      source: "erasmus",
+      meta: uni.name,
+    });
+  }
+
+  if (langRankGap > 0) {
+    tasks.push({
+      id: `erasmus-lang-${uni.id}`,
+      phase: "0–3. Ay",
+      title: `Yabancı dil seviyeni ${uni.minLanguage} düzeyine yükselt (${uni.languageExamNote})`,
+      type: "Uluslararası",
+      duration: "8–10 hafta",
+      priority: "Yüksek",
+      why: `${uni.name} partner kurum şartı olarak asgari ${uni.minLanguage} seviyesi (${uni.languageExamNote}) istemektedir.`,
+      points: 6,
+      source: "erasmus",
+      meta: uni.name,
+    });
+  }
+
+  tasks.push({
+    id: `erasmus-la-${uni.id}`,
+    phase: "3–6. Ay",
+    title: `${uni.name} için Ders Saydırma (Learning Agreement) protokolünü bölüm koordinatörüyle hazırla`,
+    type: "Uluslararası",
+    duration: "2 hafta",
+    priority: "Orta",
+    why: "Dönem kaybı yaşamamak ve ECTS (AKTS) kredi aktarımını güvenceye almak için gitmeden önce koordinatör onayı şarttır.",
+    points: 4,
+    source: "erasmus",
+    meta: uni.name,
+  });
+
+  tasks.push({
+    id: `erasmus-cv-${uni.id}`,
+    phase: "0–3. Ay",
+    title: "Europass formatında İngilizce CV ve Akademik Niyet Mektubu (Motivation Letter) hazırla",
+    type: "Sertifika",
+    duration: "1 hafta",
+    priority: "Yüksek",
+    why: "Partner üniversite kabul ofisine sunulacak aday portföyünde niyet mektubunun kalitesi seçilme şansını doğrudan artırır.",
+    points: 3,
+    source: "erasmus",
+    meta: uni.name,
+  });
+
+  tasks.push({
+    id: `erasmus-grant-${uni.id}`,
+    phase: "6–12. Ay",
+    title: `Ulusal Ajans Erasmus+ hibe sözleşmesini (${uni.monthlyGrant}€/ay) ve vize başvuru evraklarını tamamla`,
+    type: "Uluslararası",
+    duration: "3 hafta",
+    priority: "Yüksek",
+    why: `Kabul belgesi sonrası aylık ${uni.monthlyGrant}€ Erasmus+ bursunun bağlanması ve vize onayı için zorunlu süreçtir.`,
+    points: 4,
+    source: "erasmus",
+    meta: uni.name,
+  });
+
+  return tasks;
 }
