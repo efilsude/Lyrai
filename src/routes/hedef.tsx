@@ -76,7 +76,7 @@ function HedefPage() {
           <Btn variant="outline" onClick={() => store.set({ profile: DEMO_PROFILE, analyzed: false })}>Örnek profili doldur</Btn>
         </div>
 
-        <label className="mt-5 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed bg-muted/50 p-6 text-center hover:border-primary/40">
+        <label className="mt-5 flex cursor-pointer flex-col items-center justify-center gap-1 rounded-sm border-2 border-dashed bg-muted/50 p-6 text-center hover:border-primary/40">
           <input type="file" accept=".pdf,.doc,.docx,.txt" className="hidden" onChange={onFile} />
           <span className="font-semibold">{cvName ? `Yüklendi: ${cvName}` : "CV yükle (PDF, DOCX, TXT)"}</span>
           <span className="text-xs text-muted-foreground">Demo: Otomatik CV ayrıştırma henüz yok — TXT içeriği becerilere eklenir. Lütfen aşağıdaki alanları manuel doldur.</span>
@@ -87,9 +87,9 @@ function HedefPage() {
             <label key={f.k} className={f.area ? "sm:col-span-2" : ""}>
               <span className="text-sm font-semibold">{f.label}</span>
               {f.area ? (
-                <textarea rows={2} value={p[f.k]} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className="mt-1 w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
+                <textarea rows={2} value={p[f.k]} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className="mt-1 w-full rounded-sm border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
               ) : (
-                <input value={p[f.k]} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className="mt-1 w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
+                <input value={p[f.k]} placeholder={f.ph} onChange={(e) => upd(f.k, e.target.value)} className="mt-1 w-full rounded-sm border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring" />
               )}
             </label>
           ))}

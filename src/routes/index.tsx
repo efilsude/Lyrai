@@ -57,7 +57,7 @@ function Index() {
                 ))}
               </div>
             </div>
-            <div className="mt-6 rounded-lg bg-muted p-3 text-sm">
+            <div className="mt-6 rounded-sm bg-muted p-3 text-sm">
               <span className="font-semibold">Sıradaki adım:</span> Risk kaydı ve EVM tablosu hazırla · <span className="text-teal">+8 puan</span>
             </div>
           </div>
@@ -78,16 +78,16 @@ function Index() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4">
-        <div className="grid gap-8 rounded-2xl bg-navy p-8 text-navy-foreground md:grid-cols-[1.4fr_1fr] md:p-12">
+        <div className="grid gap-8 rounded-sm bg-navy p-8 text-navy-foreground md:grid-cols-[1.4fr_1fr] md:p-12">
           <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-teal">Sosyal etki modeli</div>
+            <div className="eyebrow">Sosyal etki modeli</div>
             <h2 className="mt-3 text-3xl font-bold">Kurumlar öder, dezavantajlı öğrenciler ücretsiz kullanır.</h2>
             <p className="mt-4 opacity-80">Üniversite kariyer merkezleri ve işverenlerden gelen kurumsal gelir, burs alan ve dezavantajlı öğrencilere premium erişimi ücretsiz sağlar.</p>
             <Btn to="/etki" variant="teal" className="mt-6">Modeli incele</Btn>
           </div>
           <div className="grid grid-cols-2 gap-3 self-center">
             {[["1 kurum lisansı", "≈ 200 ücretsiz öğrenci*"], ["Hedef kitle", "Burslu & ilk kuşak üniversiteliler"]].map(([a, b]) => (
-              <div key={a} className="rounded-xl border border-navy-foreground/15 p-4">
+              <div key={a} className="rounded-sm border border-navy-foreground/15 p-4">
                 <div className="text-xs opacity-70">{a}</div>
                 <div className="mt-1 font-display font-semibold">{b}</div>
               </div>

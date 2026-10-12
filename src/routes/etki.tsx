@@ -44,14 +44,14 @@ function EtkiPage() {
         ))}
       </div>
 
-      <div className="mt-10 rounded-2xl bg-navy p-8 text-navy-foreground">
+      <div className="mt-10 rounded-sm bg-navy p-8 text-navy-foreground">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-2xl font-bold">Örnek etki hedefleri</h2>
           <span className="rounded-full border border-navy-foreground/20 px-3 py-1 text-xs">Gösterim amaçlı — gerçek sonuç değildir</span>
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {metrics.map(([l, v]) => (
-            <div key={l} className="rounded-xl border border-navy-foreground/15 p-5">
+            <div key={l} className="rounded-sm border border-navy-foreground/15 p-5">
               <div className="font-display text-3xl font-bold text-teal">{v}</div>
               <div className="mt-2 text-sm opacity-80">{l}</div>
             </div>

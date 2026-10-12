@@ -82,7 +82,7 @@ function CvPage() {
             <h3 className="font-bold">Anahtar kelime uyumu <span className="text-sm font-normal text-muted-foreground">({kw.filter((x) => x.ok).length}/{kw.length})</span></h3>
             <div className="mt-4 flex flex-wrap gap-2">
               {kw.map(({ k, ok }) => (
-                <span key={k} className={`rounded-full px-3 py-1 text-xs font-semibold ${ok ? "bg-teal-soft text-teal" : "bg-destructive-soft text-destructive"}`}>{ok ? "✓" : "✕"} {k}</span>
+                <span key={k} className={`tag px-2 py-1 ${ok ? "bg-teal-soft text-teal" : "bg-destructive-soft text-destructive"}`}>{ok ? "✓" : "✕"} {k}</span>
               ))}
             </div>
             {a.missing.length > 0 && <p className="mt-4 text-sm text-muted-foreground"><span className="font-semibold text-foreground">Eksik beceriler:</span> {a.missing.slice(0, 4).map((m) => m.name).join(", ")}</p>}
@@ -93,8 +93,8 @@ function CvPage() {
             <div className="mt-4 space-y-4">
               {BEFORE_AFTER[s.target].map((x) => (
                 <div key={x.b} className="grid gap-2 text-sm">
-                  <div className="rounded-lg bg-destructive-soft p-3"><span className="font-semibold text-destructive">Önce: </span>{x.b}</div>
-                  <div className="rounded-lg bg-teal-soft p-3"><span className="font-semibold text-teal">Sonra: </span>{x.a}</div>
+                  <div className="rounded-sm bg-destructive-soft p-3"><span className="font-semibold text-destructive">Önce: </span>{x.b}</div>
+                  <div className="rounded-sm bg-teal-soft p-3"><span className="font-semibold text-teal">Sonra: </span>{x.a}</div>
                 </div>
               ))}
             </div>
@@ -116,7 +116,7 @@ function CvPage() {
               <Btn onClick={download}>İndir (.txt)</Btn>
             </div>
           </div>
-          <pre className="mt-4 max-h-[640px] overflow-auto whitespace-pre-wrap rounded-lg border bg-background p-5 font-sans text-sm leading-relaxed">{cv}</pre>
+          <pre className="mt-4 max-h-[640px] overflow-auto whitespace-pre-wrap rounded-sm border bg-background p-5 font-sans text-sm leading-relaxed">{cv}</pre>
           <p className="mt-3 text-xs text-muted-foreground">Profilindeki bilgilerden şablonla oluşturuldu. Göndermeden önce gözden geçir ve gerçek dışı bilgi ekleme.</p>
         </div>
       </div>

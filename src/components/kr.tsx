@@ -16,7 +16,7 @@ export function Header() {
     <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         <Link to="/" className="flex shrink-0 items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-navy text-navy-foreground">
+          <span className="grid h-8 w-8 place-items-center rounded-sm bg-navy text-navy-foreground">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M4 18c4 0 4-12 8-12s4 12 8 12" strokeLinecap="round" /><circle cx="20" cy="18" r="1.6" fill="currentColor" /></svg>
           </span>
           <span className="font-display text-lg font-bold">Kariyer<span className="text-teal">Rota</span></span>
@@ -52,7 +52,7 @@ export function Footer() {
   );
 }
 
-const btnBase = "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50";
+const btnBase = "inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 text-sm font-semibold transition disabled:opacity-50";
 const btnVariants = {
   primary: "bg-primary text-primary-foreground hover:opacity-90 shadow-sm",
   outline: "border bg-card text-foreground hover:bg-muted",
@@ -66,12 +66,12 @@ export function Btn({ to, onClick, children, variant = "primary", className = ""
 
 export function PriorityBadge({ p }: { p: Priority }) {
   const c = p === "Yüksek" ? "bg-destructive-soft text-destructive" : p === "Orta" ? "bg-warning-soft text-warning" : "bg-muted text-muted-foreground";
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${c}`}>{p}</span>;
+  return <span className={`tag ${c}`}>{p}</span>;
 }
 
 export function DemoNote({ children }: { children?: ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashed bg-warning-soft px-3 py-2 text-xs text-warning">
+    <div className="rounded-sm border border-dashed bg-warning-soft px-3 py-2 text-xs text-warning">
       <strong>Demo tahmini:</strong> {children ?? "Bu skorlar şeffaf, kural tabanlı bir demo hesaplamasıdır; bilimsel olarak doğrulanmış bir işe alım öngörüsü değildir."}
     </div>
   );
@@ -106,7 +106,7 @@ export function Bar({ value, tone = "primary" }: { value: number; tone?: "primar
 export function PageHead({ eyebrow, title, desc }: { eyebrow: string; title: string; desc?: string }) {
   return (
     <div className="mb-8">
-      <div className="text-xs font-bold uppercase tracking-widest text-teal">{eyebrow}</div>
+      <div className="eyebrow">{eyebrow}</div>
       <h1 className="mt-2 text-3xl font-bold sm:text-4xl">{title}</h1>
       {desc && <p className="mt-2 max-w-2xl text-muted-foreground">{desc}</p>}
     </div>
