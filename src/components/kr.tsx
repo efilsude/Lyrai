@@ -1,6 +1,7 @@
 import { Link, type LinkProps } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useStore } from "@/lib/store";
+import { useTheme } from "@/lib/theme";
 import type { Priority } from "@/lib/career-data";
 
 const NAV = [
@@ -14,6 +15,129 @@ const NAV = [
 
 const focusRing =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
+
+export function SunIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  );
+}
+
+export function MoonIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </svg>
+  );
+}
+
+export function ThemeToggle() {
+  const { isDark, toggleTheme } = useTheme();
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={isDark ? "Aydınlık moda geç" : "Karanlık moda geç"}
+      title={isDark ? "Aydınlık moda geç" : "Karanlık moda geç"}
+      className={`grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-border bg-background text-foreground hover:bg-muted transition-colors cursor-pointer ${focusRing}`}
+    >
+      {isDark ? <SunIcon className="h-4 w-4 text-warning" /> : <MoonIcon className="h-4 w-4 text-foreground" />}
+    </button>
+  );
+}
+
+export function UserMenu() {
+  const { user, logout, openAuthModal } = useStore();
+  const [open, setOpen] = useState(false);
+
+  if (!user) {
+    return (
+      <button
+        type="button"
+        onClick={openAuthModal}
+        className={`inline-flex items-center gap-1.5 border border-primary/30 bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors rounded-sm cursor-pointer ${focusRing}`}
+      >
+        <span>Giriş Yap</span>
+      </button>
+    );
+  }
+
+  const initials = user.name
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "KR";
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className={`flex items-center gap-2 border bg-background px-2.5 py-1.5 rounded-sm text-xs hover:bg-muted transition-colors cursor-pointer ${focusRing}`}
+        aria-expanded={open}
+        aria-label="Kullanıcı menüsü"
+      >
+        {user.avatar ? (
+          <img src={user.avatar} alt={user.name} className="h-5 w-5 rounded-full object-cover" />
+        ) : (
+          <span className="grid h-5 w-5 place-items-center rounded-full bg-teal text-[0.65rem] font-bold text-navy">
+            {initials}
+          </span>
+        )}
+        <span className="hidden sm:inline font-medium max-w-[110px] truncate">{user.name}</span>
+        <span className="text-[0.6rem] text-muted-foreground">▼</span>
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-52 border bg-card p-3 shadow-lg z-50 text-xs animate-in fade-in duration-150">
+          <div className="font-semibold text-foreground truncate">{user.name}</div>
+          <div className="text-[0.7rem] text-muted-foreground truncate">{user.email}</div>
+          <div className="mt-1">
+            <span className="tag text-[0.6rem] text-teal font-semibold">{user.provider} ile bağlı</span>
+          </div>
+          <div className="my-2 border-t" />
+          <Link
+            to="/hedef"
+            onClick={() => setOpen(false)}
+            className="block py-1 text-muted-foreground hover:text-foreground"
+          >
+            Profilim & Hedefim
+          </Link>
+          <Link
+            to="/yol-haritasi"
+            onClick={() => setOpen(false)}
+            className="block py-1 text-muted-foreground hover:text-foreground"
+          >
+            Kişisel Yol Haritam
+          </Link>
+          <Link
+            to="/erasmus"
+            onClick={() => setOpen(false)}
+            className="block py-1 text-muted-foreground hover:text-foreground"
+          >
+            Erasmus Tercihlerim
+          </Link>
+          <div className="my-2 border-t" />
+          <button
+            type="button"
+            onClick={() => {
+              logout();
+              setOpen(false);
+            }}
+            className="w-full text-left py-1 text-destructive hover:underline cursor-pointer font-semibold"
+          >
+            Oturumu Kapat
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function Header() {
   return (
@@ -34,9 +158,13 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <Btn to="/hedef" className="hidden sm:inline-flex">
-          Yol Haritamı Oluştur
-        </Btn>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
+          <UserMenu />
+          <Btn to="/hedef" className="hidden lg:inline-flex text-xs py-2 px-3">
+            Yol Haritamı Oluştur
+          </Btn>
+        </div>
       </div>
       <nav
         aria-label="Mobil gezinme"

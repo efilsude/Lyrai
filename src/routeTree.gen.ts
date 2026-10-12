@@ -15,6 +15,7 @@ import { Route as CvRouteImport } from './routes/cv'
 import { Route as ErasmusRouteImport } from './routes/erasmus'
 import { Route as EtkiRouteImport } from './routes/etki'
 import { Route as HedefRouteImport } from './routes/hedef'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as YolHaritasiRouteImport } from './routes/yol-haritasi'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +48,11 @@ const HedefRoute = HedefRouteImport.update({
   path: '/hedef',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const YolHaritasiRoute = YolHaritasiRouteImport.update({
   id: '/yol-haritasi',
   path: '/yol-haritasi',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/erasmus': typeof ErasmusRoute
   '/etki': typeof EtkiRoute
   '/hedef': typeof HedefRoute
+  '/login': typeof LoginRoute
   '/yol-haritasi': typeof YolHaritasiRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/erasmus': typeof ErasmusRoute
   '/etki': typeof EtkiRoute
   '/hedef': typeof HedefRoute
+  '/login': typeof LoginRoute
   '/yol-haritasi': typeof YolHaritasiRoute
 }
 export interface FileRoutesById {
@@ -79,15 +87,30 @@ export interface FileRoutesById {
   '/erasmus': typeof ErasmusRoute
   '/etki': typeof EtkiRoute
   '/hedef': typeof HedefRoute
+  '/login': typeof LoginRoute
   '/yol-haritasi': typeof YolHaritasiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/analiz' | '/cv' | '/erasmus' | '/etki' | '/hedef' | '/yol-haritasi'
+    | '/'
+    | '/analiz'
+    | '/cv'
+    | '/erasmus'
+    | '/etki'
+    | '/hedef'
+    | '/login'
+    | '/yol-haritasi'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/analiz' | '/cv' | '/erasmus' | '/etki' | '/hedef' | '/yol-haritasi'
+    | '/'
+    | '/analiz'
+    | '/cv'
+    | '/erasmus'
+    | '/etki'
+    | '/hedef'
+    | '/login'
+    | '/yol-haritasi'
   id:
     | '__root__'
     | '/'
@@ -96,6 +119,7 @@ export interface FileRouteTypes {
     | '/erasmus'
     | '/etki'
     | '/hedef'
+    | '/login'
     | '/yol-haritasi'
   fileRoutesById: FileRoutesById
 }
@@ -106,6 +130,7 @@ export interface RootRouteChildren {
   ErasmusRoute: typeof ErasmusRoute
   EtkiRoute: typeof EtkiRoute
   HedefRoute: typeof HedefRoute
+  LoginRoute: typeof LoginRoute
   YolHaritasiRoute: typeof YolHaritasiRoute
 }
 
@@ -153,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HedefRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/yol-haritasi': {
       id: '/yol-haritasi'
       path: '/yol-haritasi'
@@ -170,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   ErasmusRoute: ErasmusRoute,
   EtkiRoute: EtkiRoute,
   HedefRoute: HedefRoute,
+  LoginRoute: LoginRoute,
   YolHaritasiRoute: YolHaritasiRoute,
 }
 export const routeTree = rootRouteImport

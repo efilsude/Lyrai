@@ -71,6 +71,36 @@
   --shadow-card: 0 1px 2px oklch(0.22 0.05 268 / 0.04), 0 8px 24px -12px oklch(0.22 0.05 268 / 0.12);
 }
 
+.dark {
+  --background: oklch(0.16 0.02 262);
+  --foreground: oklch(0.94 0.01 262);
+  --card: oklch(0.20 0.025 262);
+  --card-foreground: oklch(0.94 0.01 262);
+  --popover: oklch(0.18 0.025 262);
+  --popover-foreground: oklch(0.94 0.01 262);
+  --primary: oklch(0.88 0.02 262);
+  --primary-foreground: oklch(0.16 0.02 262);
+  --secondary: oklch(0.25 0.025 262);
+  --secondary-foreground: oklch(0.92 0.01 262);
+  --muted: oklch(0.23 0.02 262);
+  --muted-foreground: oklch(0.68 0.02 262);
+  --accent: oklch(0.26 0.025 262);
+  --accent-foreground: oklch(0.94 0.01 262);
+  --teal: oklch(0.70 0.11 190);
+  --teal-soft: oklch(0.26 0.045 190);
+  --navy: oklch(0.12 0.02 262);
+  --navy-foreground: oklch(0.96 0.01 265);
+  --warning: oklch(0.76 0.13 70);
+  --warning-soft: oklch(0.26 0.04 70);
+  --destructive: oklch(0.66 0.20 25);
+  --destructive-soft: oklch(0.26 0.05 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.28 0.02 262);
+  --input: oklch(0.32 0.02 262);
+  --ring: oklch(0.70 0.11 190);
+  --shadow-card: 0 1px 3px oklch(0 0 0 / 0.35), 0 8px 24px -12px oklch(0 0 0 / 0.5);
+}
+
 @layer base {
   * { border-color: var(--color-border); }
   body {

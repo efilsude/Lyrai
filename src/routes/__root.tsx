@@ -13,7 +13,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StoreProvider } from "../lib/store";
+import { ThemeProvider } from "../lib/theme";
 import { Header, Footer } from "../components/kr";
+import { AuthModal } from "../components/AuthModal";
 
 function NotFoundComponent() {
   return (
@@ -120,14 +122,17 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <StoreProvider>
-        <Header />
-        <main className="min-h-[70vh]">
-          <Outlet />
-        </main>
-        <Footer />
-      </StoreProvider>
+      <ThemeProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <StoreProvider>
+          <Header />
+          <main className="min-h-[70vh]">
+            <Outlet />
+          </main>
+          <Footer />
+          <AuthModal />
+        </StoreProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
